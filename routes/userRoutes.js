@@ -10,7 +10,7 @@ router.post("/signup", (req, res, next) => {
   const userNameVar = req.body.username;
   const password = req.body.password;
   const emalVar = req.body.email;
-
+  console.log(req.body.username);
   if (
     !userNameVar ||
     !password ||
@@ -18,7 +18,8 @@ router.post("/signup", (req, res, next) => {
     !req.body.firstName ||
     !req.body.lastName
   ) {
-    res.status(400).json({ message: "Provide all the required info" });
+    // res.status(400).json({ message: "Provide all the required info" });
+    res.status(400).json({ message: `${req.body.username}` });
     return;
   }
 
