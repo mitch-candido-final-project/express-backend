@@ -9,8 +9,7 @@ const passport = require("passport");
 router.post("/signup", (req, res, next) => {
   const userNameVar = req.body.username;
   const password = req.body.password;
-  const emalVar = req.body.email;
-  console.log(req.body.username);
+  const emailVar = req.body.email;
   if (
     !userNameVar ||
     !password ||
@@ -18,8 +17,7 @@ router.post("/signup", (req, res, next) => {
     !req.body.firstName ||
     !req.body.lastName
   ) {
-    // res.status(400).json({ message: "Provide all the required info" });
-    res.status(400).json({ message: `${req.body.username}` });
+    res.status(400).json({ message: "Provide all the required info" });
     return;
   }
 
@@ -30,7 +28,7 @@ router.post("/signup", (req, res, next) => {
   // this is not for testing only add something like this after the featurw works correctly
 
   User.findOne(
-    { $or: [{ username: userNameVar }, { email: emalVar }] },
+    { $or: [{ username: userNameVar }, { email: emailVar }] },
     (err, foundUser) => {
       if (err) {
         res.status(500).json({ message: "Username check went bad." });
