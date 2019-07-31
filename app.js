@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 const logger = require("morgan");
 const path = require("path");
 const session = require("express-session");
+const cors = require("cors");
 
 const passport = require("passport");
 
@@ -69,10 +70,20 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000"]
+  })
+);
+
 const index = require("./routes/index");
 app.use("/", index);
 
 const userRoutes = require("./routes/userRoutes");
 app.use("/api/auth", userRoutes);
+
+const projectRoutes = require("./routes/projectRoutes");
+app.use("/api/projects/", projectRoutes);
 
 module.exports = app;
