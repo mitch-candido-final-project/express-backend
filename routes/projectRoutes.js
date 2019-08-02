@@ -6,6 +6,7 @@ const Project = require("../models/Project");
 router.post("/new-project", (req, res, next) => {
   Project.create({
     name: req.body.name,
+    description: req.body.description,
     owner: req.user._id,
     startDate: req.body.startDate,
     dueDate: req.body.dueDate,
@@ -22,11 +23,22 @@ router.post("/new-project", (req, res, next) => {
     });
 });
 
-//get details of one project
-router.get("/details/:id", (req, res, next) => {
-  Project.findById(req.params.id)
-    .then(singleProject => {
-      res.json(singleProject);
+// //get details of one project
+// router.get("/details/:id", (req, res, next) => {
+//   Project.findByOne(req.params.id)
+//     .then(singleProject => {
+//       res.json(singleProject);
+//     })
+//     .catch(err => {
+//       res.json(err);
+//     });
+// });
+
+//get all of the projects
+router.get("/all-projects", (req, res, next) => {
+  Project.find({ owner: req.user._id })
+    .then(allProjects => {
+      res.json(allProjects);
     })
     .catch(err => {
       res.json(err);
@@ -37,6 +49,7 @@ router.get("/details/:id", (req, res, next) => {
 router.post("/update/:id", (req, res, next) => {
   Project.findByIdAndUpdate(req.params.id, {
     name: req.body.name,
+    description: req.body.description,
     startDate: req.body.startDate,
     dueDate: req.body.dueDate,
     timeSpent: req.body.timeSpent,
