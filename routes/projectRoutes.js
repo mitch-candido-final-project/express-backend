@@ -1,19 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const Project = require("../models/Project");
+const uploadCloud = require("../config/cloudinary.js");
 
 //create new project
-router.post("/new-project", (req, res, next) => {
+router.post("/new-project", uploadCloud.single("image"), (req, res, next) => {
+  if (req.file) {
+    req.body.image = req.file.url;
+  }
   Project.create({
     name: req.body.name,
     description: req.body.description,
     owner: req.user._id,
     startDate: req.body.startDate,
     dueDate: req.body.dueDate,
-    timeSpent: req.body.timeSpent,
-    complete: req.body.complete,
+    timeSpent: 0,
+    complete: false,
     isPublic: req.body.isPublic,
-    images: req.body.images
+    image: req.body.image
   })
     .then(singleProject => {
       res.json(singleProject);

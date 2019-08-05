@@ -10,7 +10,8 @@ const projectSchema = new Schema({
   timeSpent: { type: String },
   complete: { type: Boolean },
   isPublic: { type: Boolean },
-  images: [{ type: String }]
+  image: { type: String },
+  status: { type: String }
 });
 //TODO: Missing tasks
 const Project = mongoose.model("Project", projectSchema);

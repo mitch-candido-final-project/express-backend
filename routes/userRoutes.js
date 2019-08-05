@@ -5,6 +5,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
 const passport = require("passport");
+const uploadCloud = require("../config/cloudinary.js");
 
 router.post("/signup", (req, res, next) => {
   const userNameVar = req.body.username;
