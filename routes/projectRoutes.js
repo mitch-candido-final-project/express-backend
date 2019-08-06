@@ -5,8 +5,11 @@ const uploadCloud = require("../config/cloudinary.js");
 
 //create new project
 router.post("/new-project", uploadCloud.single("image"), (req, res, next) => {
+  let theImage;
   if (req.file) {
-    req.body.image = req.file.url;
+    theImage = req.file.url;
+  } else {
+    theImage = "";
   }
   Project.create({
     name: req.body.name,
@@ -17,7 +20,7 @@ router.post("/new-project", uploadCloud.single("image"), (req, res, next) => {
     timeSpent: 0,
     complete: false,
     isPublic: req.body.isPublic,
-    image: req.body.image
+    image: theImage
   })
     .then(singleProject => {
       res.json(singleProject);
@@ -27,18 +30,18 @@ router.post("/new-project", uploadCloud.single("image"), (req, res, next) => {
     });
 });
 
-// //get details of one project
-// router.get("/details/:id", (req, res, next) => {
-//   Project.findByOne(req.params.id)
-//     .then(singleProject => {
-//       res.json(singleProject);
-//     })
-//     .catch(err => {
-//       res.json(err);
-//     });
-// });
+// // //get details of one project
+// // router.get("/details/:id", (req, res, next) => {
+// //   Project.findByOne(req.params.id)
+// //     .then(singleProject => {
+// //       res.json(singleProject);
+// //     })
+// //     .catch(err => {
+// //       res.json(err);
+// //     });
+// // });
 
-//get all of the projects
+// //get all of the projects
 router.get("/all-projects", (req, res, next) => {
   Project.find({ owner: req.user._id })
     .then(allProjects => {
@@ -50,15 +53,22 @@ router.get("/all-projects", (req, res, next) => {
 });
 
 //update project
-router.post("/update/:id", (req, res, next) => {
-  let data = { ...req.body };
+router.post("/update/:id", uploadCloud.single("image"), (req, res, next) => {
+  let updateData = {};
+
+  updateData.name = req.body.name;
+  updateData.description = req.body.description;
+  updateData.owner = req.user._id;
+  updateData.startDate = req.body.startDate;
+  updateData.dueDate = req.body.dueDate;
+  updateData.isPublic = req.body.isPublic;
 
   if (req.file) {
-    data.images = req.file.url;
+    updateData.image = req.file.url;
+  } else {
+    updateData.image = "";
   }
-  console.log("this is the back-end", req.body);
-
-  Project.findByIdAndUpdate(req.params.id, data)
+  Project.findByIdAndUpdate(req.params.id, updateData)
     .then(singleProject => {
       res.json(singleProject);
     })
