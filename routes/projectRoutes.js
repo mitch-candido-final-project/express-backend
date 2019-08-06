@@ -50,16 +50,20 @@ router.get("/all-projects", (req, res, next) => {
 });
 
 //update project
-router.post("/update/:id", (req, res, next) => {
+router.post("/update/:id", uploadCloud.single("image"), (req, res, next) => {
+  if (req.file) {
+    req.body.image = req.file.url;
+  }
+  console.log("----=-=-=-=-=--=-", req.body);
   Project.findByIdAndUpdate(req.params.id, {
     name: req.body.name,
-    description: req.body.description,
+    description: "manual",
     startDate: req.body.startDate,
     dueDate: req.body.dueDate,
     timeSpent: req.body.timeSpent,
     complete: req.body.complete,
     isPublic: req.body.isPublic,
-    images: req.body.images
+    image: req.body.image
   })
     .then(singleProject => {
       res.json(singleProject);
